@@ -54,40 +54,40 @@ jobs:
 
 #Parte 3#
 
-deploy:
-  name: Deploy para Ambiente de Teste no EC2
-  needs: build
-  runs-on: ubuntu-latest
-  environment:
-    name: test
-  steps:
-    - name: Checkout do Código
-      uses: actions/checkout@v3
+  deploy:
+    name: Deploy para Ambiente de Teste no EC2
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: test
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v3
 
-    - name: Baixar Artefato de Build
-      uses: actions/download-artifact@v4
-      with:
-        name: build-artifact
-        path: ./build
+      - name: Baixar Artefato de Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: ./build
 
-    - name: Configurar Acesso SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ec2-3-144-94-205.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+      - name: Configurar Acesso SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ec2-3-144-94-205.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
-    - name: Enviar Artefatos para o Servidor EC2
-      run: |
-        scp -r ./build ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
+      - name: Enviar Artefatos para o Servidor EC2
+        run: |
+          scp -r ./build ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
 
-    - name: Fazer Deploy no Servidor EC2
-      run: |
-        ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com << 'EOF'
-        cd /home/ubuntu/node-app
-        npm install --production
-        pm2 stop index || true
-        pm2 start index.js --name node-app
-        pm2 save
-        EOF
+      - name: Fazer Deploy no Servidor EC2
+        run: |
+          ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com << 'EOF'
+          cd /home/ubuntu/node-app
+          npm install --production
+          pm2 stop index || true
+          pm2 start index.js --name node-app
+          pm2 save
+          EOF
         
