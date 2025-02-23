@@ -83,6 +83,7 @@ jobs:
       - name: Enviar Artefatos para o Servidor EC2
         run: |
           ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com "rm -rf /home/ubuntu/node-app/*"
+          scp -r ./build/* ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
 
       - name: Fazer Deploy no Servidor EC2
         run: |
