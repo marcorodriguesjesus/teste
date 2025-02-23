@@ -1,3 +1,5 @@
+#Parte 1#
+
 name: CI/CD Pipeline
 
 on:
@@ -26,3 +28,28 @@ jobs:
 
       - name: Construir a Aplicação
         run: npm run build
+
+#Parte 2#
+
+      - name: Preparar Artefato para Release
+        run: |
+          mkdir -p build
+          cp -R index.js app.js package.json build/
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: ./build
+
+      - name: Criar Release no GitHub com o Artefato
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v1.0.${{ github.run_number }}
+          name: "Release v1.0.${{ github.run_number }}"
+          body: "Release gerada para o commit ${{ github.sha }}"
+          files: |
+            ./build/**
+
+        
