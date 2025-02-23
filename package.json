@@ -1,0 +1,23 @@
+{
+    "name": "node-test-app",
+    "version": "1.0.0",
+    "description": "Aplicação Node.js simples para teste de CI/CD",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js",
+      "test": "jest",
+      "build": "echo 'Construindo a aplicação...' && exit 0"
+    },
+    "dependencies": {
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "jest": "^29.0.0",
+      "supertest": "^6.3.0"
+    },
+    "jest": {
+      "testEnvironment": "node"
+    },
+    "author": "Marco Jesus",
+    "license": "MIT"
+  }
