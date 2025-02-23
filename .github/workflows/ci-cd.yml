@@ -29,6 +29,9 @@ jobs:
       - name: Construir a Aplicação
         run: npm run build
 
+      - name: Limpar Artefatos Anteriores
+        run: rm -rf ./build
+  
 #Parte 2#
 
       - name: Preparar Artefato para Release
@@ -79,7 +82,7 @@ jobs:
 
       - name: Enviar Artefatos para o Servidor EC2
         run: |
-          scp -r ./build ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
+          ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com "rm -rf /home/ubuntu/node-app/*"
 
       - name: Fazer Deploy no Servidor EC2
         run: |
