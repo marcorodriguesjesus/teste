@@ -45,15 +45,23 @@ jobs:
           name: build-artifact
           path: ./build
 
+      - name: Remover Tag Existente (se houver)
+        run: |
+          git fetch --tags
+          git tag -d v1.0 || true
+          git push origin :refs/tags/v1.0 || true
+
       - name: Criar Release no GitHub com o Artefato
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v1.0.${{ github.run_number }}
-          name: "Release v1.0.${{ github.run_number }}"
+          tag: v1.0
+          name: "Release v1.0 - ${{ github.run_number }}"
           body: "Release gerada para o commit ${{ github.sha }}"
           files: |
             ./build/**
+          draft: false
+          prerelease: false
 
 #Parte 3#
 
@@ -94,4 +102,24 @@ jobs:
           pm2 start index.js --name node-app
           pm2 save
           EOF
-        
+
+#Parte 4#
+
+  notify:
+    name: Notificar Falhas do Pipeline
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Enviar Notificação por E-mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 'Falha no Pipeline CI/CD - Commit ${{ github.sha }}'
+          body: |
+            O pipeline CI/CD falhou. Verifique os logs para mais detalhes.
+          to: marcorodrigues.jesus@gmail.com
+          from: 'marcorodrigues.jesus@gmail.com'
