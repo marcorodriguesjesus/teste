@@ -48,15 +48,15 @@ jobs:
       - name: Remover Tag Existente (se houver)
         run: |
           git fetch --tags
-          git tag -d v1.0 || true
+          git tag -d v2.0 || true
           git push origin :refs/tags/v1.0 || true
 
       - name: Criar Release no GitHub com o Artefato
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v1.0
-          name: "Release v1.0 - ${{ github.run_number }}"
+          tag: v2.0
+          name: "Release v2.0 - ${{ github.run_number }}"
           body: "Release gerada para o commit ${{ github.sha }}"
           files: |
             ./build/**
