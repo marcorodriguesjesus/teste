@@ -1,4 +1,4 @@
-#Parte 1#
+#Parte 1 - Build, Instalação de Dependências, teste unitário#
 
 name: CI/CD Pipeline
 
@@ -32,7 +32,7 @@ jobs:
       - name: Limpar Artefatos Anteriores
         run: rm -rf ./build
   
-#Parte 2#
+#Parte 2 - Criação do Artefato#
 
       - name: Preparar Artefato para Release
         run: |
@@ -63,7 +63,7 @@ jobs:
           draft: false
           prerelease: false
 
-#Parte 3#
+#Parte 3- Deploy na EC2 AWS#
 
   deploy:
     name: Deploy para Ambiente de Teste no EC2
@@ -103,7 +103,7 @@ jobs:
           pm2 save
           EOF
 
-#Parte 4#
+#Parte 4 - Notificação em casos de falhas#
 
   notify:
     name: Notificar Falhas do Pipeline
