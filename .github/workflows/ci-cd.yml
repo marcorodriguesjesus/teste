@@ -48,15 +48,15 @@ jobs:
       - name: Remover Tag Existente (se houver)
         run: |
           git fetch --tags
-          git tag -d v2.0 || true
+          git tag -d v5.0 || true
           git push origin :refs/tags/v1.0 || true
 
       - name: Criar Release no GitHub com o Artefato
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: v4.0
-          name: "Release v4.0 - ${{ github.run_number }}"
+          tag: v5.0
+          name: "Release v5.0 - ${{ github.run_number }}"
           body: "Release gerada para o commit ${{ github.sha }}"
           files: |
             ./build/**
@@ -86,16 +86,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-3-144-94-205.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H ec2-18-222-184-211.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: Enviar Artefatos para o Servidor EC2
         run: |
-          ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com "rm -rf /home/ubuntu/node-app/*"
-          scp -r ./build/* ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
+          ssh ubuntu@ec2-18-222-184-211.us-east-2.compute.amazonaws.com "rm -rf /home/ubuntu/node-app/*"
+          scp -r ./build/* ubuntu@ec2-18-222-184-211.us-east-2.compute.amazonaws.com:/home/ubuntu/node-app
 
       - name: Fazer Deploy no Servidor EC2
         run: |
-          ssh ubuntu@ec2-3-144-94-205.us-east-2.compute.amazonaws.com << 'EOF'
+          ssh ubuntu@ec2-18-222-184-211.us-east-2.compute.amazonaws.com << 'EOF'
           cd /home/ubuntu/node-app
           npm install --production
           pm2 stop index || true
